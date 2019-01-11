@@ -1,8 +1,8 @@
 # Traffic-Light-Based-on-89C52MCU
 ### Proteus Simulation Video:
-[http://www.bilibili.com/video/av39625094](http://www.bilibili.com/video/av39625094)
+[https://www.bilibili.com/video/av39625094](https://www.bilibili.com/video/av39625094)
 ### Achievement Demonstration:
-[http://www.bilibili.com/video/av39772128](http://www.bilibili.com/video/av39772128)
+[https://www.bilibili.com/video/av39772128](https://www.bilibili.com/video/av39772128)
 ### Proteus:
 ![](https://i.imgur.com/APCsanW.png)
 
