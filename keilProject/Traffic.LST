@@ -1,0 +1,384 @@
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.01
+OBJECT MODULE PLACED IN Traffic.OBJ
+ASSEMBLER INVOKED BY: D:\Keil4\C51\BIN\A51.EXE Traffic.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+  0030                 2                     REDTIME EQU 30H
+  0031                 3                     GREENTIME EQU 31H
+                       4     
+0000                   5                     ORG 0000H
+0000 020100            6                     LJMP MAIN
+000B                   7                     ORG 000BH
+000B 020300            8                     LJMP COUNTTIME ;¶¨Ê±Æ÷0ÖÐ¶Ï
+0003                   9                     ORG 0003H
+0003 020400           10                     LJMP CHANMODE ;Íâ²¿ÖÐ¶Ï0
+                      11     
+0100                  12                     ORG 0100H
+0100                  13     MAIN:
+                      14     ;1.Æô¶¯¼ì²é
+                      15     ;2.³õÊ¼»¯¶¨Ê±Æ÷0¡¢Íâ²¿ÖÐ¶Ï
+0100 758901           16                     MOV TMOD,#01H           ;²ÉÓÃ·½Ê½1
+0103 758CEC           17                     MOV TH0,#0ECH           ;¶¨Ê±5msµÄ¶¨Ê±³£Ê
+0106 758A76           18                     MOV TL0,#76H
+0109 D28C             19                     SETB TR0                        ;Æô¶¯¶¨Ê±Æ÷
+010B D2A9             20                     SETB ET0                        ;ÔÊÐí¶¨Ê±Æ÷ÖÐ¶Ï
+010D D2A8             21                     SETB EX0                        ;ÔÊÐíÍâ²¿ÖÐ¶Ï
+010F D288             22                     SETB IT0                        ;ÏÂ½µÑØ´¥·¢·½Ê½
+0111 D2AF             23                     SETB EA                         ;¿ªÆôCPUÖÐ¶Ï
+                      24     ;3.¶¨Òå±äÁ¿³õÖµ
+0113 7800             25                     MOV R0,#0
+0115 753019           26                     MOV REDTIME,#25         ;ºìµÆÆðÊ¼25s
+0118 753114           27                     MOV GREENTIME,#20       ;ÂÌµÆÆðÊ¼20s
+011B 7580FF           28                     MOV P0,#0FFH            ;ÊÂë¹ÜÈ«²»ÁÁ
+011E 75A000           29                     MOV P2,#00H                     ;¹²ÒõÊÂë¹ÜÃ¿¶Î¶¼²»ÁÁ
+0121 759000           30                     MOV P1,#00H                     ;Ã¿¸ö·¢¹â¶þ¼«¹Ü¶¼²»ÁÁ
+                      31     
+0124 A931             32                     MOV R1,GREENTIME                ;R1´¢´æÊµÊ±±ä»¯µÄÄÏ±±Ê±¼ä
+0126 AA30             33                     MOV R2,REDTIME  ;R2´¢´æÊµÊ±±ä»¯µÄ¶«Î÷Ê±¼ä
+                      34     
+0128 D290             35                     SETB P1.0                       ;³õÊ¼×´Ì¬£¬ÄÏ±±ÂÌµÆÁÁ
+012A D295             36                     SETB P1.5                       ;³õÊ¼×´Ì¬£¬¶«Î÷ºìµÆÁÁ
+012C 7B01             37                     MOV R3,#1                       ;¼ÇÂ¼ÔËÐÐµÄ½×¶Î
+012E 7C00             38                     MOV R4,#0                       ;¼ÇÂ¼ÊÂë¹ÜÎ»Ñ¡ÐÅºÅ      
+0130 7D00             39                     MOV R5,#0                       ;¼ÇÂ¼ÂÌµÆÉÁË¸´ÎÊ
+0132 7F00             40                     MOV R7,#0                       ;¼ÇÂ¼¹¤×÷Ä£Ê½0ÎªÕ³£ÔËÐÐ£¬1ÎªÉèÖÃÄ£Ê½    
+                      41     ;4.¿ªÊ¼LEDºÍSEG¿ªÊ¼µ¹¼ÆÊ±¹¤×÷
+0134 BF0105           42     LOOP:   CJNE R7,#1,WORK         ;½øÐÐÄ£Ê½ÅÐ¶Ï
+0137 12041A           43                     LCALL SETMODE           ;R7=1,Ôò½øÈëÉèÖÃÄ£Ê½
+013A 80F8             44                     JMP LOOP                        ;½øÐÐÄ£Ê½ÅÐ¶ÏµÄÑ­»·
+                      45     
+013C B8C8F5           46     WORK:   CJNE R0,#200,LOOP       ;¹¤×÷Ä£Ê½
+013F 7800             47                     MOV R0,#0                       ;R0=200ÔòÎª1s½øÐÐµ¹¼ÆÊ±Ê±¼äµÄ±ä»¯
+0141 19               48                     DEC R1
+0142 1A               49                     DEC R2
+0143 12047C           50                     LCALL TWINKGREEN        ;ÂÌµÆÉÁË¸×Ó³ÌÐò£¨ÅÐ¶ÏÂÌµÆÊÇ·ñÉÁË¸£¬ÊÇ·ñÖ´ÐÐÉÁË¸£©
+0146 1204AF           51                     LCALL  STAGECHAN        ;ÔËÐÐµÄ½×¶ÎµÄÅÐ¶Ï£¬¼´Ò»¸ö½×¶ÎµÄµ¹¼ÆÊ±Íê³ÉÖ®ºó£¬ÖØÐÂ
+                             ¸³Öµ
+0149 80E9             52                     JMP LOOP
+                      53     
+                      54     
+0300                  55                     ORG 0300H
+0300                  56     COUNTTIME:
+0300 758CEC           57                     MOV TH0,#0ECH
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     2
+
+0303 758A76           58                     MOV TL0,#76H            ;¶¨Ê±Æ÷ÖØ×°     
+0306 BF0001           59                     CJNE R7,#0,STEPR0       
+0309 08               60                     INC R0                          ;R0¼ÇÂ¼ÖÐ¶ÏÖ´ÐÐµÄ´ÎÊ£¬Ã¿Ö´ÐÐÒ»´Î¼Ó1
+030A 0C               61     STEPR0: INC R4                          ;R4ÎªÆ¬Ñ¡ÐÅºÅ
+030B BC0802           62                     CJNE R4,#8,TODISP
+030E 7C00             63                     MOV R4,#0
+0310 1204F0           64     TODISP: LCALL DISPSEG           ;¸ù¾ÝÊÂë¹ÜµÄÆ¬Ñ¡ÐÅºÅ½øÐÐÏÔÊ¾
+0313 32               65     DONTIME:RETI
+                      66     
+                      67     
+0400                  68                     ORG 0400H
+0400                  69     CHANMODE:
+0400 0F               70                     INC R7
+0401 BF0202           71                     CJNE R7,#2,REINIT
+0404 7F00             72                     MOV R7,#0
+                      73     
+0406 7A00             74     REINIT: MOV R2,#0                        ;±êÖ¾Î»ÇåÁã£¬Ò»ÇÐ´ÓÍ·¿ªÊ¼
+0408 7B01             75                     MOV R3,#1                       
+040A 7C00             76                     MOV R4,#0                               
+040C 7D00             77                     MOV R5,#0
+040E A931             78                     MOV R1,GREENTIME
+0410 AA30             79                     MOV R2,REDTIME
+0412 759000           80                     MOV P1,#00H
+0415 D290             81                     SETB P1.0
+0417 D295             82                     SETB P1.5
+0419 32               83     DONSTOP:RETI
+                      84     
+                      85     
+                      86     ;0 ÉèÖÃÄ£Ê½
+041A                  87     SETMODE:                                                                
+041A 20B310           88     CHECKEY:JB P3.3,CKEYDO
+041D 120473           89                     LCALL DELAY50
+0420 120473           90                     LCALL DELAY50  ;ÑÓÊ±£¬Ïû¶¶
+0423 20B302           91     WTKUP:  JB P3.3,FINUP
+0426 80FB             92                     JMP WTKUP          ;µÈ´°´¼üµ¯Æð
+0428 120443           93     FINUP:  LCALL INCTIME  ;Íê³É°´¼üµÄÒ»´Î¶¯×÷Ö®ºó½øÐÐÃëÊµÄÔö¼Ó
+042B 8011             94                     JMP DONSET
+                      95     
+042D 20B40E           96     CKEYDO: JB P3.4,DONSET
+0430 120473           97                     LCALL DELAY50
+0433 120473           98                     LCALL DELAY50  ;ÑÓÊ±Ïû¶¶
+0436 20B402           99     WTKUP2: JB P3.4,FINDON ;µÈ´°´¼üµ¯Æð
+0439 80FB            100                     JMP WTKUP2         ; Íê³É°´¼üµÄÒ»´Î¶¯×÷Ö®ºó½øÐÐÃëÊµÄ¼õÉÙ
+043B 12045D          101     FINDON: LCALL DECTIME
+043E                 102     DONSET: 
+043E A931            103                     MOV R1,GREENTIME
+0440 AA30            104                     MOV R2,REDTIME 
+0442 22              105                     RET
+                     106     
+                     107     ;0.1ÉèÖÃÄ£Ê½Ê±¼ä¼õ
+0443 E531            108     INCTIME:MOV A,GREENTIME
+0445 B45A02          109                     CJNE A,#90,INCON  ;×î¸ßÂÌµÆÊ±¼äÎª90s(ºìµÆ95s)
+0448 800E            110                     JMP DONINC
+044A 2405            111     INCON:  ADD A,#5
+044C F531            112                     MOV GREENTIME,A
+044E E530            113                     MOV A,REDTIME
+0450 2405            114                     ADD A,#5
+0452 F530            115                     MOV REDTIME,A
+0454 A931            116                     MOV R1,GREENTIME
+0456 AA30            117                     MOV R2,REDTIME
+0458                 118     DONINC: 
+0458 A931            119                     MOV R1,GREENTIME
+045A AA30            120                     MOV R2,REDTIME 
+045C 22              121                     RET
+                     122     ;0.2ÉèÖÃÄ£Ê½Ê±¼ä¼Ó                      
+045D E531            123     DECTIME:MOV A,GREENTIME
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     3
+
+045F B40A02          124                     CJNE A,#10,DECON  ;×îµÍÂÌµÆÊ±¼äÎª10s(ºìµÆ15s)
+0462 800E            125                     JMP DONDEC
+0464 9405            126     DECON:  SUBB A,#5
+0466 F531            127                     MOV GREENTIME,A
+0468 E530            128                     MOV A,REDTIME
+046A 9405            129                     SUBB A,#5
+046C F530            130                     MOV REDTIME,A
+046E A931            131                     MOV R1,GREENTIME
+0470 AA30            132                     MOV R2,REDTIME
+0472 22              133     DONDEC: RET
+                     134     ;DELAY50MS×Ó³ÌÐò£¨50ms£©
+0473 7EC8            135     DELAY50:MOV R6,#200
+0475 787D            136     H2:             MOV R0,#125
+0477 D8FE            137     H1:             DJNZ R0,H1
+0479 DEFA            138                     DJNZ R6,H2
+047B 22              139                     RET
+                     140     ;1.ÂÌµÆÉÁË¸×Ó³ÌÐò
+047C                 141     TWINKGREEN:
+047C BB0117          142                     CJNE R3,#1,TOTAG3
+047F B9032C          143                     CJNE R1,#3,DONTWINK
+0482 B864FD          144     WT1:    CJNE R0,#100,WT1
+0485 7800            145                     MOV R0,#0
+0487 B290            146                     CPL P1.0
+0489 0D              147                     INC R5
+048A BD02F5          148                     CJNE R5,#2,WT1
+048D 7D00            149                     MOV R5,#0
+048F 19              150                     DEC R1
+0490 1A              151                     DEC R2
+0491 B900EE          152                     CJNE R1,#0,WT1
+0494 8018            153                     JMP DONTWINK            
+                     154     
+0496 BB0315          155     TOTAG3: CJNE R3,#3,DONTWINK
+0499 BA0312          156                     CJNE R2,#3,DONTWINK
+049C B864FD          157     WT2:    CJNE R0,#100,WT2
+049F 7800            158                     MOV R0,#0
+04A1 B293            159                     CPL P1.3
+04A3 0D              160                     INC R5
+04A4 BD02F5          161                     CJNE R5,#2,WT2
+04A7 7D00            162                     MOV R5,#0
+04A9 19              163                     DEC R1
+04AA 1A              164                     DEC R2
+04AB BA00EE          165                     CJNE R2,#0,WT2
+04AE 22              166     DONTWINK:RET
+                     167     ;2.ÔËÐÐ½×¶ÎµÄÅÐ¶ÏÓëµ¹¼ÆÊ±ÖØÐÂ¸³Öµ×Ó³ÌÐò
+04AF                 168     STAGECHAN:              
+04AF B90002          169                     CJNE R1,#0,COMR2        ;¼ì²é¶«Î÷ÄÏ±±µÄµ¹¼ÆÊ±ÊÇ·ñÎª0£¬¼ÆÊÔËÐÐ½×¶Î
+04B2 8003            170                     JMP INCR3
+04B4 BA0038          171     COMR2:  CJNE R2,#0,DONESTAGE;¶¼²»Îª0£¬Ã»ÓÐ½×¶ÎµÄ±ä»¯
+04B7 0B              172     INCR3:  INC R3
+                     173     
+04B8 BB0502          174                     CJNE R3,#5,STAGE1
+04BB 7B01            175                     MOV R3,#1
+                     176     
+04BD BB0206          177     STAGE1: CJNE R3,#2,STAGE2
+04C0 7905            178                     MOV R1,#5
+04C2 B290            179                     CPL P1.0                        ;ÄÏ±±ÂÌµÆÃð£¬»ÆµÆÁÁ
+04C4 B291            180                     CPL P1.1
+                     181     
+04C6 BB030C          182     STAGE2: CJNE R3,#3,STAGE3
+04C9 A930            183                     MOV R1,REDTIME
+04CB AA31            184                     MOV R2,GREENTIME
+04CD B291            185                     CPL P1.1
+04CF B292            186                     CPL P1.2                        ;ÄÏ±±»ÆµÆÃðºìµÆÁÁ
+04D1 B295            187                     CPL P1.5                        ;¶«Î÷ºìµÆÃð£¬ÂÌµÆÁÁ
+04D3 B293            188                     CPL P1.3
+04D5 BB0406          189     STAGE3: CJNE R3,#4,STAGE4
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     4
+
+04D8 7A05            190                     MOV R2,#5
+04DA B293            191                     CPL P1.3
+04DC B294            192                     CPL P1.4                        ;¶«Î÷ÂÌµÆÃð£¬»ÆµÆÁÁ
+04DE BB010E          193     STAGE4: CJNE R3,#1,DONESTAGE
+04E1 A931            194                     MOV R1,GREENTIME
+04E3 AA30            195                     MOV R2,REDTIME
+04E5 B294            196                     CPL P1.4
+04E7 B295            197                     CPL P1.5                        ;¶«Î÷»ÆµÆÃð£¬ÂÌµÆÁÁ
+04E9 B290            198                     CPL P1.0                        ;ÄÏ±±ºìµÆÃð£¬ÂÌµÆÁÁ
+04EB B292            199                     CPL P1.2
+04ED B2D0            200                     CPL P
+04EF 22              201     DONESTAGE:RET   
+                     202     ;3.ÊÂë¹ÜÏÔÊ¾×Ó³ÌÐò
+04F0                 203     DISPSEG:
+04F0 EC              204                     MOV A,R4
+04F1 90057A          205                     MOV DPTR,#SEGCON
+04F4 93              206                     MOVC A,@A+DPTR
+04F5 F580            207                     MOV P0,A                        ;ÊÂë¹ÜÊ¹ÄÜ              
+                     208     
+04F7 BC000B          209                     CJNE R4,#0,SEG1         ;ÅÐ¶ÏÊÇÄÄÒ»Î»ÊÂë¹ÜÁÁ
+04FA E9              210                     MOV A,R1                        ;Èç¹ûÊÇµÚÒ»¸öÊÂë¹ÜÁÁ£¬ÔòÎªÄÏ±±ÏÔÊ¾
+04FB 75F00A          211                     MOV B,#10                       
+04FE 84              212                     DIV AB
+04FF 900570          213                     MOV DPTR,#NUM;*********************************
+0502 93              214                     MOVC A,@A+DPTR
+0503 F5A0            215                     MOV P2,A                        ;ÏÔÊ¾±±Ê®Î»
+                     216     
+0505 BC010D          217     SEG1:   CJNE R4,#1,SEG2
+0508 E9              218                     MOV A,R1
+0509 75F00A          219                     MOV B,#10
+050C 84              220                     DIV AB
+050D E5F0            221                     MOV A,B
+050F 900570          222                     MOV DPTR,#NUM
+0512 93              223                     MOVC A,@A+DPTR
+0513 F5A0            224                     MOV P2,A                        ;ÏÔÊ¾±±¸öÎ»
+                     225     
+0515 BC020B          226     SEG2:   CJNE R4,#2,SEG3
+0518 EA              227                     MOV A,R2
+0519 75F00A          228                     MOV B,#10
+051C 84              229                     DIV AB
+051D 900570          230                     MOV DPTR,#NUM
+0520 93              231                     MOVC A,@A+DPTR
+0521 F5A0            232                     MOV P2,A                        ;ÏÔÊ¾¶«Ê®Î»
+                     233     
+0523 BC030D          234     SEG3:   CJNE R4,#3,SEG4
+0526 EA              235                     MOV A,R2
+0527 75F00A          236                     MOV B,#10
+052A 84              237                     DIV AB
+052B E5F0            238                     MOV A,B
+052D 900570          239                     MOV DPTR,#NUM
+0530 93              240                     MOVC A,@A+DPTR
+0531 F5A0            241                     MOV P2,A                        ;ÏÔÊ¾¶«¸öÎ»
+                     242     
+0533 BC040B          243     SEG4:   CJNE R4,#4,SEG5
+0536 E9              244                     MOV A,R1
+0537 75F00A          245                     MOV B,#10
+053A 84              246                     DIV AB
+053B 900570          247                     MOV DPTR,#NUM
+053E 93              248                     MOVC A,@A+DPTR
+053F F5A0            249                     MOV P2,A                        ;ÏÔÊ¾ÄÏÊ®Î»
+                     250     
+0541 BC050D          251     SEG5:   CJNE R4,#5,SEG6
+0544 E9              252                     MOV A,R1
+0545 75F00A          253                     MOV B,#10
+0548 84              254                     DIV AB
+0549 E5F0            255                     MOV A,B
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     5
+
+054B 900570          256                     MOV DPTR,#NUM
+054E 93              257                     MOVC A,@A+DPTR
+054F F5A0            258                     MOV P2,A                        ;ÏÔÊ¾ÄÏ¸öÎ»
+                     259     
+0551 BC060B          260     SEG6:   CJNE R4,#6,SEG7
+0554 EA              261                     MOV A,R2
+0555 75F00A          262                     MOV B,#10
+0558 84              263                     DIV AB
+0559 900570          264                     MOV DPTR,#NUM
+055C 93              265                     MOVC A,@A+DPTR
+055D F5A0            266                     MOV P2,A                         ;ÏÔÊ¾Î÷Ê®Î»
+                     267     
+055F BC070D          268     SEG7:   CJNE R4,#7,FINDISP
+0562 EA              269                     MOV A,R2
+0563 75F00A          270                     MOV B,#10
+0566 84              271                     DIV AB
+0567 E5F0            272                     MOV A,B
+0569 900570          273                     MOV DPTR,#NUM
+056C 93              274                     MOVC A,@A+DPTR
+056D F5A0            275                     MOV P2,A                         ;ÏÔÊ¾Î÷¸öÎ»
+056F 22              276     FINDISP:RET                                      ;½áÊøÏÔÊ¾£¬³ÌÐò·µ»Ø
+                     277             ;Ê×é£ºNUM¿ØÖÆÊÂë¹ÜÏÔÊ¾Ê×Ö£¬SEGCON¿ØÖÆÊÂë¹ÜÊ¹ÄÜÐÅºÅ£¨ÊÂë¹ÜµÍµçÆ½ÁÁ£©
+0570 3F065B4F        278     NUM: DB 3FH,06H,5BH,4FH,66H,6DH,7DH,07H,7FH,6FH
+0574 666D7D07                
+0578 7F6F                    
+057A FEFDFBF7        279     SEGCON: DB 0FEH,0FDH,0FBH,0F7H,0EFH,0DFH,0BFH,07FH
+057E EFDFBF7F                
+                     280                     END
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     6
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+CHANMODE . . . . .  C ADDR   0400H   A   
+CHECKEY. . . . . .  C ADDR   041AH   A   
+CKEYDO . . . . . .  C ADDR   042DH   A   
+COMR2. . . . . . .  C ADDR   04B4H   A   
+COUNTTIME. . . . .  C ADDR   0300H   A   
+DECON. . . . . . .  C ADDR   0464H   A   
+DECTIME. . . . . .  C ADDR   045DH   A   
+DELAY50. . . . . .  C ADDR   0473H   A   
+DISPSEG. . . . . .  C ADDR   04F0H   A   
+DONDEC . . . . . .  C ADDR   0472H   A   
+DONESTAGE. . . . .  C ADDR   04EFH   A   
+DONINC . . . . . .  C ADDR   0458H   A   
+DONSET . . . . . .  C ADDR   043EH   A   
+DONSTOP. . . . . .  C ADDR   0419H   A   
+DONTIME. . . . . .  C ADDR   0313H   A   
+DONTWINK . . . . .  C ADDR   04AEH   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+FINDISP. . . . . .  C ADDR   056FH   A   
+FINDON . . . . . .  C ADDR   043BH   A   
+FINUP. . . . . . .  C ADDR   0428H   A   
+GREENTIME. . . . .  N NUMB   0031H   A   
+H1 . . . . . . . .  C ADDR   0477H   A   
+H2 . . . . . . . .  C ADDR   0475H   A   
+INCON. . . . . . .  C ADDR   044AH   A   
+INCR3. . . . . . .  C ADDR   04B7H   A   
+INCTIME. . . . . .  C ADDR   0443H   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+LOOP . . . . . . .  C ADDR   0134H   A   
+MAIN . . . . . . .  C ADDR   0100H   A   
+NUM. . . . . . . .  C ADDR   0570H   A   
+P. . . . . . . . .  B ADDR   00D0H.0 A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+REDTIME. . . . . .  N NUMB   0030H   A   
+REINIT . . . . . .  C ADDR   0406H   A   
+SEG1 . . . . . . .  C ADDR   0505H   A   
+SEG2 . . . . . . .  C ADDR   0515H   A   
+SEG3 . . . . . . .  C ADDR   0523H   A   
+SEG4 . . . . . . .  C ADDR   0533H   A   
+SEG5 . . . . . . .  C ADDR   0541H   A   
+SEG6 . . . . . . .  C ADDR   0551H   A   
+SEG7 . . . . . . .  C ADDR   055FH   A   
+SEGCON . . . . . .  C ADDR   057AH   A   
+SETMODE. . . . . .  C ADDR   041AH   A   
+STAGE1 . . . . . .  C ADDR   04BDH   A   
+STAGE2 . . . . . .  C ADDR   04C6H   A   
+STAGE3 . . . . . .  C ADDR   04D5H   A   
+STAGE4 . . . . . .  C ADDR   04DEH   A   
+STAGECHAN. . . . .  C ADDR   04AFH   A   
+STEPR0 . . . . . .  C ADDR   030AH   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TODISP . . . . . .  C ADDR   0310H   A   
+TOTAG3 . . . . . .  C ADDR   0496H   A   
+A51 MACRO ASSEMBLER  TRAFFIC                                                              01/01/2019 01:21:07 PAGE     7
+
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TWINKGREEN . . . .  C ADDR   047CH   A   
+WORK . . . . . . .  C ADDR   013CH   A   
+WT1. . . . . . . .  C ADDR   0482H   A   
+WT2. . . . . . . .  C ADDR   049CH   A   
+WTKUP. . . . . . .  C ADDR   0423H   A   
+WTKUP2 . . . . . .  C ADDR   0436H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
